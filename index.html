@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three.js animation program for simulation system</title>
+  <style>
+    #speedBarContainer {
+      margin-top: 10px;
+      width: 100%;
+      background-color: #ddd;
+    }
+    #speedBar {
+      width: 100%;
+      height: 30px;
+      background-color: #4caf50;
+      text-align: center;
+      line-height: 30px;
+      color: white;
+    }
+  </style>
+</head>
+<body id="body">
+  <button id="selectDirectory">Select Directory</button>
+  <input type="file" id="fileInput" webkitdirectory style="display:none">
+  <select id="fileSelector"></select>
+  <button id="stepLine">Step Line</button>
+  <button id="stepTimestampButton">Step Timestamp</button>
+  <button id="resume">Resume</button>
+  <div id="progress">Line 0 of 0 lines</div> <!-- Progress display -->
+  <div id="speedBarContainer">
+    <div id="speedBar">Speed: 1x</div>
+  </div>
+  <script type="module" src="/main.js"></script>
+  <script>
+    document.getElementById('selectDirectory').addEventListener('click', async () => {
+      const fileInput = document.getElementById('fileInput');
+      fileInput.click();
+
+      fileInput.addEventListener('change', () => {
+        const fileSelector = document.getElementById('fileSelector');
+        fileSelector.innerHTML = ''; // Clear existing options
+
+        const files = fileInput.files;
+        
+        for (const file of files) {
+          if (file.name.endsWith('.txt') && file.webkitRelativePath.startsWith('animation/')) {
+            const option = document.createElement('option');
+            option.value = file.webkitRelativePath;
+            option.textContent = file.name;
+            fileSelector.appendChild(option);
+          }
+        }
+      });
+    });
+
+    document.getElementById('fileSelector').addEventListener('change', (event) => {
+      const selectedFile = event.target.value;
+      if (selectedFile) {
+        window.dispatchEvent(new CustomEvent('fileSelected', { detail: selectedFile }));
+      }
+    });
+  </script>
+</body>
+</html>
